@@ -1,0 +1,529 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #ffffff;
+}
+
+/* NAVBAR */
+.site-header {
+  background: #33292a;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 2rem;
+}
+
+.desktop-nav {
+  display: none; /* skryté na mobilu, viditelné na desktopu */
+}
+
+/* univerzální skrytí elementů s atributem hidden (zabraňuje FOUC) */
+[hidden] {
+  display: none !important;
+}
+
+/* Hamburger Menu */
+.hamburger {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001; /* nad overlayem */
+  overflow: visible; /* aby se transformace křížku neodřízly */
+}
+
+.hamburger span {
+  position: absolute;
+  left: 8px; /* čárky kratší než celý box -> vejdou se i po rotaci */
+  right: 8px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.25s ease, top 0.25s ease,
+    bottom 0.25s ease;
+  transform-origin: center;
+}
+
+/* Křížek při otevření */
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* rozmístění čárek v zavřeném stavu */
+.hamburger span:nth-child(1) {
+  top: 10px;
+}
+.hamburger span:nth-child(2) {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.hamburger span:nth-child(3) {
+  bottom: 10px;
+}
+
+/* Otevřený stav → X uprostřed (bez posunu doprava) */
+.hamburger.open span:nth-child(1) {
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+/*  Overlay menu  */
+.mobile-menu {
+  position: fixed;
+  inset: 0 0 auto 0; /* shora, přes šířku; výšku řešíme níž */
+  height: 50vh; /* přes půlku viewportu */
+  background: rgba(51, 41, 42, 0.98);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transform: translateY(-100%); /* výchozí stav mimo obrazovku */
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+/* Po otevření (JS: odebere hidden a přidá .open) */
+.mobile-menu.open {
+  transform: translateY(0);
+}
+
+/* Menu položky */
+.mobile-menu ul {
+  list-style: none;
+  text-align: center;
+  display: grid;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-menu a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.4rem;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.mobile-menu a:hover {
+  color: #e9877b;
+}
+
+/* Když je menu otevřené, zabrání scrollování stránky */
+body.no-scroll {
+  overflow: hidden;
+}
+
+/*  Desktop menu (nad 992px) */
+@media (min-width: 993px) {
+  .site-header {
+    justify-content: center;
+  }
+  .hamburger {
+    display: none;
+  }
+  .mobile-menu {
+    display: none;
+  }
+
+  .desktop-nav {
+    display: block;
+  }
+  .desktop-nav ul {
+    display: flex;
+    gap: 5rem;
+    list-style: none;
+  }
+  .desktop-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+  .desktop-nav a:hover {
+    color: #e9877b;
+  }
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  height: 100vh;
+  background: url("Images/images/hero.jpg") center/cover no-repeat;
+  color: #fff;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.hero-overlay {
+  position: relative; /* kvůli overlay */
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: 100%; /* aby byl flex na celou výšku */
+}
+
+.hero .container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end; /* text vpravo, ale uvnitř containeru */
+}
+
+.hero-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  text-align: right;
+  font-size: clamp(34px, 6vw, 80px);
+  font-weight: 800;
+  line-height: 1.1;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+}
+
+/*  ABOUT  */
+.about {
+  background: #fff;
+  padding: 3rem 0;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr; /* 2 sloupce, text širší */
+  column-gap: 3rem;
+  align-items: stretch; /* aby oba sloupce byly stejně vysoké */
+}
+
+.about-text h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.about-text p {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  max-width: 46ch; /* aby řádky nebyly moc dlouhé (46 znaků)*/
+}
+
+.about-media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    row-gap: 1rem;
+  }
+
+  .about-media {
+    height: 222px;
+  }
+  .about-media img {
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* WHAT WE DO */
+.what-we-do {
+  background-color: #33292a;
+  color: #fff;
+}
+
+.what-we-do .container {
+  max-width: 1200px;
+  margin: auto;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+.what-we-do h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.what-we-do p {
+  max-width: 800px;
+  margin: 0 auto 3rem auto;
+  line-height: 1.6;
+  color: #fff;
+}
+
+.icons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 1.5rem;
+  row-gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.icon img {
+  max-width: 100px;
+  margin-bottom: 0.8rem;
+}
+
+.icon h3 {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .icons {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* TRIPS */
+.trips {
+  max-width: 1200px;
+  margin: auto;
+  padding: 4rem 2rem;
+}
+
+.trip-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.trip-item {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+.trip-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.trip-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 1.6rem;
+  color: #333;
+  aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 768px) {
+  .trip-grid {
+    grid-template-columns: 1fr; /* jeden sloupec na mobilu */
+    gap: 1rem;
+  }
+
+  .trip-item,
+  .trip-center {
+    aspect-ratio: auto;
+    width: 100%;
+  }
+
+  .trip-item img {
+    height: auto;
+    width: 100%;
+  }
+
+  .trip-center {
+    height: 80px; /* pevná výška pro mobil */
+  }
+}
+
+/* WHERE */
+.where {
+  background-color: #644b4f;
+  color: #fff;
+  padding: 4rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.where-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .where-grid {
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+    column-gap: 3rem;
+  }
+}
+
+.left-column h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.right-column p {
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+  max-width: 70ch; /* aby řádky nebyly moc dlouhé */
+}
+
+/* button */
+.where .btn {
+  margin-top: 1rem;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  background: #efa69d;
+  color: #33292a;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.where .btn:hover {
+  background: #e9877b;
+}
+
+/* REVIEWS */
+.reviews {
+  background: #fff;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.reviews .intro {
+  max-width: 800px;
+  margin: 0 auto 3rem auto;
+  line-height: 1.6;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.review img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.review p {
+  max-width: 500px;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.review h4 {
+  font-weight: bold;
+  margin-top: auto;
+}
+
+@media (min-width: 768px) {
+  .review-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+  }
+}
+
+/* GALLERY */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 0;
+  width: 100%;
+}
+
+.gallery-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-grid img {
+    height: auto;
+    object-fit: cover;
+  }
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  background-color: #33292a;
+  color: #fff;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: #efa69d;
+  text-decoration: underline;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: #e9877b;
+}
